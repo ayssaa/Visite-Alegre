@@ -60,7 +60,6 @@ nav a img { /* aqui é para mexer nos icones da nav */
 nav a:hover {
     /* animaçaozinha para os botoes */
     background-color: #FBE2E2;
-    color: #F36F6F;
     transform: translateY(-2px);
 }
 
@@ -71,7 +70,6 @@ nav a:hover img {
 
 .ativo {
     background-color: #FBE2E2;
-    color: #F36F6F;
 }
 
 .bemvindo {
@@ -269,7 +267,7 @@ section.interface-login {
 
 .botao:hover {
     background-color: #e85f5f;
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(243, 111, 111, 0.35);
 }
 
@@ -311,7 +309,7 @@ section.interface-login {
 }
 
 .cartao:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(243, 111, 111, 0.35);
 }
 
@@ -403,7 +401,6 @@ section.interface-login {
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     padding: 0px 15px 15px 15px;
-    width: 30%;
 }
 
 .cabecalho {
@@ -495,14 +492,13 @@ section.interface-login {
     max-width: 580px;
     color: #F36F6F;
     font-size: 17px;
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.6;
     transition: all 0.25s ease;
 }
 
 .ver-todas:hover {
     background-color: #F36F6F;
-    transform: translateY(-2px);
     box-shadow: 0 8px 18px rgba(243, 111, 111, 0.35);
 }
 

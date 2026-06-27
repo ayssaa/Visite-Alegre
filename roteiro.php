@@ -9,15 +9,15 @@
 <body>
 
     <header>
-        <div class="title"><a href="/inicio.html"><img src="/img/VisiteAlegreLogo.png" alt=""></a></div>
+        <div class="title"><a href="/inicio.php"><img src="/img/VisiteAlegreLogo.png" alt=""></a></div>
         <menu>
             <nav>
-                <a href="/inicio.html"><img src="img/inicio.svg" alt=""><span>Início</span></a>
-                <a href="/pontos.html"><img src="img/pontos.svg" alt=""><span>Pontos Turísticos</span></a>
-                <a href="/eventos.html"><img src="img/eventos.svg" alt=""><span>Eventos</span></a>
-                <a href="/roteiro.html" class="ativo"><img src="img/roteiro.svg" alt=""><span>Roteiro</span></a>
-                <a href="/guias.html"><img src="img/guias.svg" alt=""><span>Guias</span></a>
-                <a href="/login.html"><img src="img/sair.svg" alt=""><span>Sair</span></a>
+                <a href="/inicio.php"><img src="img/inicio.svg" alt=""><span>Início</span></a>
+                <a href="/pontos.php"><img src="img/pontos.svg" alt=""><span>Pontos Turísticos</span></a>
+                <a href="/eventos.php"><img src="img/eventos.svg" alt=""><span>Eventos</span></a>
+                <a href="/roteiro.php" class="ativo"><img src="img/roteiro.svg" alt=""><span>Roteiro</span></a>
+                <a href="/guias.php"><img src="img/guias.svg" alt=""><span>Guias</span></a>
+                <a href="/login.php"><img src="img/sair.svg" alt=""><span>Sair</span></a>
             </nav>
         </menu>
     </header>
@@ -124,5 +124,6 @@
 
     </footer>
 
+    <script src="script.js"></script>
 </body>
 </html>
