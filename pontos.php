@@ -1,3 +1,5 @@
+<?php include_once 'conexao.php'; ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -210,6 +212,75 @@
                         <p>Salvar Ponto</p>
                     </div>
                 </a>
+            </div>
+        </div>
+
+        <div class="painel-guia">
+            <div class="cabecalho-guia">
+                <div class="bemvindo-texto">
+                    <h2>Histórico de Pontos</h2>
+                    <p>Confira a lista de todos os pontos cadastrados.</p>
+                </div>
+
+                <div class="guia-imagem">
+                    <img src="/img/ratopeiraCamera.png" alt="">
+                </div>
+            </div>
+
+            <div class="lista">
+                <div class="tabela">
+                    <table>
+                        <tr>
+                            <td><b>Título</b></td>
+                            <td><b>Telefone</b></td>
+                            <td><b>Taxa de Entrada</b></td>
+                            <td><b>Descrição</b></td>
+                        </tr>
+                        <?php
+                            try {
+                                // Buscando todos pontos turisticos
+                                $sqlPontos = "SELECT nome, telefone, taxaEntrada, descricao FROM PontoTuristico ORDER BY nome ASC";
+                                $stmtPontos = $pdo->query($sqlPontos);
+                                $pontos = $stmtPontos->fetchAll(PDO::FETCH_ASSOC);
+
+                                // Verifica se encontrou algum ponto turístico
+                                if (!empty($pontos)):
+                                    foreach ($pontos as $ponto):
+                            ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($ponto['nome']); ?></td>
+                                            
+                                            <td><?php echo !empty($ponto['telefone']) ? htmlspecialchars($ponto['telefone']) : '<span style="color: #999;">Não informado</span>'; ?></td>
+                                            
+                                            <td>
+                                                <?php 
+                                                if ($ponto['taxaEntrada'] > 0) {
+                                                    echo 'R$ ' . number_format($ponto['taxaEntrada'], 2, ',', '.');
+                                                } else {
+                                                    echo '<span style="color: #28a745; font-weight: 500;">Gratuito</span>';
+                                                }
+                                                ?>
+                                            </td>
+                                            
+                                            <td><?php echo htmlspecialchars($ponto['descricao'] ?? 'Sem descrição'); ?></td>
+                                        </tr>
+                            <?php 
+                                    endforeach;
+                                else: 
+                            ?>
+                                    <tr>
+                                        <td colspan="4" style="text-align: center; padding: 20px; color: #666;">
+                                            Nenhum ponto turístico registado no sistema.
+                                        </td>
+                                    </tr>
+                            <?php 
+                                endif;
+                            } catch (PDOException $e) {
+                                echo "<tr><td colspan='4' style='color: red; text-align: center;'>Erro ao carregar pontos: " . $e->getMessage() . "</td></tr>";
+                            }
+                            ?>
+                    </table>
+                </div>
             </div>
         </div>
     </main>

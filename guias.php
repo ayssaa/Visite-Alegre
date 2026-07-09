@@ -1,3 +1,5 @@
+<?php include_once 'conexao.php'; ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -165,7 +167,7 @@
                 </div>
             </div>
 
-            <div class="lista-turistas">
+            <div class="lista">
                 <div class="tabela">
                     <table>
                         <tr>

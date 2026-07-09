@@ -1,3 +1,5 @@
+<?php include_once 'conexao.php'; ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -118,6 +120,75 @@
                 </a>
             </div>
         </div>
+
+        <div class="painel-guia">
+            <div class="cabecalho-guia">
+                <div class="bemvindo-texto">
+                    <h2>Histórico de Roteiros</h2>
+                    <p>Confira a lista de todos os roteiros cadastrados.</p>
+                </div>
+
+                <div class="guia-imagem">
+                    <img src="/img/ratopeiraCamera.png" alt="">
+                </div>
+            </div>
+
+            <div class="lista">
+                <div class="tabela">
+                    <table>
+                        <tr>
+                            <td><b>Guia Responsável</b></td>
+                            <td><b>Data</b></td>
+                            <td><b>Capacidade Máxima</b></td>
+                            <td><b>Local de Encontro</b></td>
+                        </tr>
+                        
+                        <?php
+                        try {
+                            $sqlRoteiros = "
+                                SELECT 
+                                    u.nome AS nome_guia, 
+                                    DATE_FORMAT(r.dataRoteiro, '%d/%m/%Y') AS data_formatada, 
+                                    r.capacidadeMaxima, 
+                                    r.localEncontro 
+                                FROM Roteiro r
+                                INNER JOIN Usuario u ON r.idGuia = u.idUsuario
+                                ORDER BY r.dataRoteiro ASC
+                            ";
+                            $stmtRoteiros = $pdo->query($sqlRoteiros);
+                            $roteiros = $stmtRoteiros->fetchAll(PDO::FETCH_ASSOC);
+
+                            // Verifica se encontrou algum roteiro
+                            if (!empty($roteiros)):
+                                foreach ($roteiros as $roteiro):
+                        ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($roteiro['nome_guia']); ?></td>
+                                        <td><?php echo htmlspecialchars($roteiro['data_formatada']); ?></td>
+                                        <td><?php echo htmlspecialchars($roteiro['capacidadeMaxima']); ?> pessoas</td>
+                                        <td><?php echo htmlspecialchars($roteiro['localEncontro']); ?></td>
+                                    </tr>
+                        <?php 
+                                endforeach;
+                            else: 
+                        ?>
+                                <tr>
+                                    <td colspan="4" style="text-align: center; padding: 20px; color: #666;">
+                                        Nenhum roteiro cadastrado no sistema.
+                                    </td>
+                                </tr>
+                        <?php 
+                            endif;
+                        } catch (PDOException $e) {
+                            echo "<tr><td colspan='4' style='color: red; text-align: center;'>Erro ao carregar roteiros: " . $e->getMessage() . "</td></tr>";
+                        }
+                        ?>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
     </main>
 
     <footer>

@@ -26,6 +26,10 @@ header {
     margin-left: 15px;
 }
 
+.title img:hover {
+    transform: scale(1.04);
+}
+
 menu {
     margin: 0;
     padding: 0;
@@ -38,23 +42,26 @@ nav {
     margin-right: 15px;
 }
 
-nav a { /* aqui é para nos itens da nav */
+nav a {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 18px;
+    padding: 12px 20px;
     border-radius: 999px;
     text-decoration: none;
-    color: inherit; /* aqui é para os links clicados não ficarem azul feio */
-    transition: all 0.25s ease;
+    color: inherit;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1;
 }
 
 nav a img { /* aqui é para mexer nos icones da nav */
     width: 20px;
     height: 20px;
-    margin-right: 8px;
     object-fit: contain;
-    transition: transform 0.25s ease;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 nav a:hover {
@@ -70,23 +77,32 @@ nav a:hover img {
 
 .ativo {
     background-color: #FBE2E2;
+    color: #F36F6F;
+    font-weight: 600;
+    box-shadow: inset 0 2px 4px rgba(243, 111, 111, 0.06);
 }
 
 .bemvindo {
     display: flex;
     align-items: center;
     gap: 30px;
-    background-color: #fff6f6;
-    border: 1px solid #F36F6F;
+    background-color: white;
+    border: 1px solid rgba(243, 111, 111, 0.25);
     border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
     margin: 30px 200px 0px 200px;
     padding: 15px 15px 0px 15px;
     min-width: 1000px; /* coloquei para tentar deixar mais responsivo */
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .bemvindo img {
-    width: 300px;
+    width: 260px;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bemvindo:hover img {
+    transform: scale(1.03) translateY(-3px);
 }
 
 .bemvindo-texto h1,
@@ -94,7 +110,7 @@ nav a:hover img {
     margin: 0;
     color: #F36F6F;
     font-family: 'Caveat', cursive;
-    font-size: 32px;
+    font-size: 38px;
     font-weight: 700;
 }
 
@@ -102,16 +118,16 @@ nav a:hover img {
 .login-texto h2 {
     margin: 6px 0 12px;
     color: #0B3558;
-    font-size: 45px;
+    font-size: 42px;
     font-weight: 700;
     line-height: 1.15;
 }
 
 .bemvindo-texto p,
 .login-texto p {
-    max-width: 560px;
+    max-width: 650px;
     color: #27496D;
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 400;
     line-height: 1.6;
     padding-bottom: 15px;
@@ -279,13 +295,14 @@ section.interface-login {
 .painel {
     justify-content: center;
     align-items: center;
-    background-color: #fff6f6;
-    border: 1px solid #F36F6F;
+    background-color: rgba(255, 246, 246, 0.7);
+    border: 1px solid rgba(243, 111, 111, 0.2);
     border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
     margin: 30px 200px 0px 200px;
     padding: 15px;
     min-width: 1000px; /* coloquei para tentar deixar mais responsivo */
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .todos-cartao {
@@ -297,15 +314,17 @@ section.interface-login {
 
 .cartao {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     background-color: white;
-    border: 1px solid #F36F6F;
+    border: 2px solid rgba(243, 111, 111, 0.15);
     border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.02);
     padding: 15px;
     min-width: 200px;
     height: 150px;
+    flex: 1;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .cartao:hover {
@@ -317,15 +336,19 @@ section.interface-login {
     padding: 15px 15px 15px 0;
 }
 
+.painel-texto {
+    margin-left: 15px;
+}
+
 .painel-imagem img {
-    width: 40px;
-    height: 40px;
-    margin-right: 8px;
+    width: 44px;
+    height: 44px;
     padding: 10px;
-    border: 1px solid #F36F6F;
-    border-radius: 20px;
+    border: 2px solid rgba(243, 111, 111, 0.2);
+    border-radius: 14px;
     object-fit: contain;
     background-color: #fff6f6;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .painel-texto h2 {
@@ -365,10 +388,11 @@ section.interface-login {
     justify-content: center;
     align-items: center;
     background-color: white;
-    border: 1px solid #F36F6F;
+    border: 2px solid rgba(243, 111, 111, 0.15);
     border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.02);
     padding: 0 15px 15px 15px;
+    flex: 1;
 }
 
 .atividade-recente img {
@@ -397,9 +421,9 @@ section.interface-login {
     justify-content: center;
     align-items: center;
     background-color: white;
-    border: 1px solid #F36F6F;
+    border: 2px solid rgba(243, 111, 111, 0.15);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.02);
     border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     padding: 0px 15px 15px 15px;
 }
 
@@ -436,18 +460,26 @@ section.interface-login {
 .cartao-evento {
     display: flex;
     background-color: #fff6f6;
-    border: 1px solid #F36F6F;
+    border: 2px solid rgba(243, 111, 111, 0.15);
     border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.02);
     min-width: 200px;
     height: 150px;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cartao-evento:hover {
+    transform: translateX(4px);
+    border-color: #F36F6F;
+    background-color: #ffffff;
+    box-shadow: 0 6px 18px rgba(243, 111, 111, 0.08);
 }
 
 .evento-imagem img {
     object-fit: contain;
     width: 150px;
     height: 150px;
-    border: 1px solid #F36F6F;
+    border: 2px solid rgba(243, 111, 111, 0.15);
     border-radius: 20px 0 0 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
@@ -461,9 +493,16 @@ section.interface-login {
 
 .evento-texto h2 {
     margin: 0;
-    color: #0B3558;
-    font-size: 14px;
+    color: #27496D;
+    font-size: 13px;
     font-weight: 400;
+}
+
+.evento-texto h2:hover {
+    margin: 0;
+    color: #F36F6F;;
+    font-size: 13px;
+    font-weight: 600;
 }
 
 .evento-texto h3 {
@@ -544,9 +583,9 @@ tbody tr:hover {
     justify-content: center;
     align-items: center;
     background-color: #fff6f6;
-    border: 1px solid #F36F6F;
+    border: 1px solid rgba(243, 111, 111, 0.2);
     border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
     margin: auto;
     margin-top: 30px;
     padding: 15px;
@@ -581,7 +620,7 @@ tbody tr:hover {
 
 .cadastro {
     background-color: white;
-    border: 1px solid #F36F6F;
+    border: 1px solid rgba(243, 111, 111, 0.2);
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     padding: 25px;
@@ -737,7 +776,7 @@ tbody tr:hover {
     box-shadow: 0 4px 10px rgba(243, 111, 111, 0.25);
 }
 
-.lista-turistas {
+.lista {
     background-color: white;
     border: 1px solid #F36F6F;
     border-radius: 20px;

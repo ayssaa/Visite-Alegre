@@ -1,3 +1,51 @@
+<?php include_once 'conexao.php'; ?>
+
+<?php
+$totalPontos = 0;
+$totalEventos = 0;
+$totalRoteiros = 0;
+$totalGuias = 0;
+$proximosEventos = [];
+$atividadesRecentes = [];
+
+try {
+    $sql = "SELECT COUNT(*) FROM pontoturistico"; // contando quantos pontos turisticos existem no banco
+    $stmt = $pdo->query($sql);
+    $totalPontos = $stmt->fetchColumn();
+
+    $sql = "SELECT COUNT(*) FROM evento"; // contando quantos eventos existem no banco
+    $stmt = $pdo->query($sql);
+    $totalEventos = $stmt->fetchColumn();
+
+    $sql = "SELECT COUNT(*) FROM roteiro"; // contando quantos roteiros existem no banco
+    $stmt = $pdo->query($sql);
+    $totalRoteiros = $stmt->fetchColumn();
+
+    $sql = "SELECT COUNT(*) FROM guia"; // contando quantos guias existem no banco
+    $stmt = $pdo->query($sql);
+    $totalGuias = $stmt->fetchColumn();
+
+    $sqlEventos = "
+        SELECT 
+            'img/eventos.svg' AS caminho_imagem,
+            e.titulo, 
+            DATE_FORMAT(e.dataEvento, '%d/%m/%Y') AS data_evento,
+            pt.nome AS local
+        FROM Evento e
+        INNER JOIN PontoTuristico pt ON e.idPontoTuristico = pt.idPontoTuristico
+        WHERE e.dataEvento >= CURDATE()
+        ORDER BY e.dataEvento ASC
+        LIMIT 4
+    ";
+    $stmtEventos = $pdo->query($sqlEventos);
+    $proximosEventos = $stmtEventos->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    // Se der algum erro na busca, a variável continua como 0 e não quebra a tela
+    // Você pode registrar o erro se quiser, mas para o usuário final, mostraremos 0.
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -148,9 +196,6 @@
                             foreach ($proximosEventos as $evento): 
                         ?>
                             <div class="cartao-evento">
-                                <div class="evento-imagem">
-                                    <img src="<?php echo $evento['caminho_imagem']; ?>" alt="Imagem do Evento">
-                                </div>
 
                                 <div class="evento-texto">
                                     <h3><?php echo $evento['titulo']; ?></h3>

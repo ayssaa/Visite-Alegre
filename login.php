@@ -1,3 +1,5 @@
+<?php include_once 'conexao.php'; ?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -11,7 +13,7 @@
 
     <header>
         <div class="title">
-            <a href="/inicio.html">
+            <a href="/inicio.php">
                 <img src="/img/VisiteAlegreLogo.png" alt="">
             </a>
         </div>
