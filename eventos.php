@@ -1,5 +1,76 @@
 <?php include_once 'conexao.php'; ?>
 
+<?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $pontoTuristico = $_POST["ponto-turistico"];
+
+        $stmt = $pdo->prepare("
+            SELECT idPontoTuristico
+            FROM PontoTuristico
+            WHERE nome = ?
+        ");
+
+        $stmt->execute([$pontoTuristico]);
+        $ponto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($ponto) {
+            $idPontoTuristico = $ponto["idPontoTuristico"];
+        } else {
+            echo "<script>alert('Ponto turístico não encontrado.');</script>";
+        }
+
+        $titulo = $_POST["titulo"];
+        $date = $_POST["date"];
+        $number = $_POST["number"];
+        $tipoEvento = $_POST["tipoEvento"];
+
+        $stmt = $pdo->prepare("
+            SELECT idEvento
+            FROM Evento
+            WHERE titulo = ?
+            AND dataEvento = ?
+            AND taxaEntrada = ?
+            AND tipoEvento = ?
+            AND idPontoTuristico = ?
+        ");
+
+        $stmt->execute([
+            $titulo,
+            $date,
+            $number,
+            $tipoEvento,
+            $idPontoTuristico
+        ]);
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            echo "<script>alert('Já existe um evento com essas informações.');</script>";
+        } else {
+
+            $stmt = $pdo->prepare("
+                INSERT INTO Evento
+                (titulo, dataEvento, taxaEntrada, tipoEvento, idPontoTuristico)
+                VALUES (?, ?, ?, ?, ?)
+            ");
+
+            $stmt->execute([
+                $titulo,
+                $date,
+                $number,
+                $tipoEvento,
+                $idPontoTuristico
+            ]);
+
+            echo "<script>alert('Evento cadastrado com sucesso!');</script>";
+        }
+    }
+?>
+
+<!--
+    Parte da página de eventos
+-->
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,6 +80,10 @@
     <title>Visite Alegre</title>
 </head>
 <body>
+
+    <!--
+        Menu do Inicio
+    -->
 
     <header>
         <div class="title"><a href="inicio.php"><img src="img/VisiteAlegreLogo.png" alt=""></a></div>
@@ -25,6 +100,10 @@
     </header>
 
     <main>
+
+        <!--
+            Cabeçalho com título e Ratopeira
+        -->
         
         <div class="painel-guia">
             <div class="cabecalho-guia">
@@ -38,73 +117,9 @@
                 </div>
             </div>
 
-            <?php
-                if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                    $pontoTuristico = $_POST["ponto-turistico"];
-
-                    $stmt = $pdo->prepare("
-                        SELECT idPontoTuristico
-                        FROM pontoturistico
-                        WHERE nome = ?
-                    ");
-
-                    $stmt->execute([$pontoTuristico]);
-                    $ponto = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                    if ($ponto) {
-                        $idPontoTuristico = $ponto["idPontoTuristico"];
-                    } else {
-                        echo "Ponto turístico não encontrado.";
-                    }
-
-
-                    $titulo = $_POST["titulo"];
-                    $date = $_POST["date"];
-                    $number = $_POST["number"];
-                    $tipoEvento = $_POST["tipoEvento"];
-
-                    $stmt = $pdo->prepare("
-                        SELECT idEvento
-                        FROM evento
-                        WHERE titulo = ?
-                        AND dataEvento = ?
-                        AND taxaEntrada = ?
-                        AND tipoEvento = ?
-                        AND idPontoTuristico = ?
-                    ");
-
-                    $stmt->execute([
-                        $titulo,
-                        $date,
-                        $number,
-                        $tipoEvento,
-                        $idPontoTuristico
-                    ]);
-
-                    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                    if ($result) {
-                        echo "Já existe um evento com essas informações.";
-                    } else {
-
-                        $stmt = $pdo->prepare("
-                            INSERT INTO evento
-                            (titulo, dataEvento, taxaEntrada, tipoEvento, idPontoTuristico)
-                            VALUES (?, ?, ?, ?, ?)
-                        ");
-
-                        $stmt->execute([
-                            $titulo,
-                            $date,
-                            $number,
-                            $tipoEvento,
-                            $idPontoTuristico
-                        ]);
-
-                        echo "Evento cadastrado com sucesso!";
-                    }
-                }
-            ?>
+            <!--
+                Cadastro dos eventos
+            -->
 
             <form method="POST">
                 <div class="cadastro">
@@ -150,11 +165,14 @@
                     </div>
 
                     <?php
-                        $stmt = $pdo->query("
+                        $sql = "
                             SELECT nome
-                            FROM pontoturistico
+                            FROM PontoTuristico
                             ORDER BY nome
-                        ");
+                        ";
+
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->execute();
 
                         $pontos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     ?>
@@ -189,6 +207,10 @@
                 </div>
             </form>
         </div>
+
+        <!--
+            Historico dos eventos no banco de dados
+        -->
 
         <div class="painel-guia" id="historico">
             <div class="cabecalho-guia">
@@ -226,17 +248,17 @@
                                 INNER JOIN PontoTuristico pt ON pt.idPontoTuristico = e.idPontoTuristico
                                 ORDER BY e.dataEvento ASC
                             ";
-                            $stmtEventos = $pdo->query($sqlEventos);
+                            $stmtEventos = $pdo->prepare($sqlEventos);
+                            $stmtEventos->execute();
                             $eventos = $stmtEventos->fetchAll(PDO::FETCH_ASSOC);
 
-                            // Verifica se encontrou algum evento
                             if (!empty($eventos)):
                                 foreach ($eventos as $evento):
                         ?>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($evento['nome_evento']); ?></td>
-                                        <td><?php echo htmlspecialchars($evento['dataEvento']); ?></td>
-                                        <td><?php echo htmlspecialchars($evento['localEvento']); ?></td>
+                                        <td><?= htmlspecialchars($evento['nome_evento']) ?></td>
+                                        <td><?= htmlspecialchars($evento['dataEvento']) ?></td>
+                                        <td><?= htmlspecialchars($evento['localEvento']) ?></td>
                                         <td>
                                                 <?php 
                                                 if ($evento['taxaEntrada'] > 0) {
@@ -246,34 +268,29 @@
                                                 }
                                                 ?>
                                             </td>
-                                        <td><?php echo htmlspecialchars($evento['tipoEvento']); ?></td>
+                                        <td><?= htmlspecialchars($evento['tipoEvento']) ?></td>
                                     </tr>
                         <?php 
                                 endforeach;
                             else: 
                         ?>
                                 <tr>
-                                    <td colspan="4" style="text-align: center; padding: 20px; color: #666;">
-                                        Nenhum evento cadastrado no sistema.
+                                    <td colspan="5" style="text-align: center; padding: 20px; color: #666;">
+                                        Nenhum evento cadastrado.
                                     </td>
                                 </tr>
                         <?php 
                             endif;
                         } catch (PDOException $e) {
-                            echo "<tr><td colspan='4' style='color: red; text-align: center;'>Erro ao carregar eventos: " . $e->getMessage() . "</td></tr>";
+                            echo "<tr><td colspan='5' style='color: red; text-align: center;'>Erro ao carregar eventos: " . htmlspecialchars($e->getMessage()) . "</td></tr>";
                         }
                         ?>
                     </table>
                 </div>
             </div>
-        </div>
-        
+        </div>    
     </main>
-
-    <footer>
-
-    </footer>
-
+    <footer></footer>
     <script src="script.js"></script>
 </body>
 </html>

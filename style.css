@@ -1,4 +1,4 @@
-/* --- GLOBAIS --- */
+/* --- globais --- */
 @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap'); /* include na caveat e poppins */
 
 body {
@@ -12,7 +12,7 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
-/* --- HEADER & NAV --- */
+/* --- header & nav --- */
 header {
     display: flex;
     align-items: center;
@@ -84,7 +84,7 @@ nav a:hover img {
     box-shadow: inset 0 2px 4px rgba(243, 111, 111, 0.06);
 }
 
-/* --- SEÇÃO BEM-VINDO & PAINEL --- */
+/* --- seção bem-vindo & painel --- */
 .bemvindo {
     display: flex;
     align-items: center;
@@ -232,7 +232,7 @@ nav a:hover img {
     gap: 30px;
 }
 
-/* --- ATIVIDADES, EVENTOS & ROTEIROS --- */
+/* --- atividades, eventos & roteiros --- */
 .atividade-recente {
     margin-top: 20px;
     width: 70%;
@@ -418,7 +418,7 @@ nav a:hover img {
     border-bottom: none;
 }
 
-/* Caixa da data */
+/* caixa da data */
 .roteiro-data {
     width: 60px;
     height: 60px;
@@ -445,7 +445,7 @@ nav a:hover img {
     text-transform: uppercase;
 }
 
-/* Informações do roteiro */
+/* informações do roteiro */
 .roteiro-info {
     flex: 1;
 }
@@ -460,7 +460,6 @@ nav a:hover img {
     display: flex;
     align-items: center;
     gap: 6px;
-
     margin: 4px 0;
     font-size: 14px;
     color: #555;
@@ -471,21 +470,17 @@ nav a:hover img {
     height: 14px;
 }
 
-/* Horário */
+/* horário */
 .roteiro-hora {
     display: flex;
     align-items: center;
     gap: 6px;
-
     padding: 8px 12px;
     border-radius: 20px;
-
     background: #FFF5F5;
     color: #F46A6A;
-
     font-size: 14px;
     font-weight: 600;
-
     flex-shrink: 0;
 }
 
@@ -514,7 +509,7 @@ nav a:hover img {
     letter-spacing: 2px;
 }
 
-/* --- LOGIN, CADASTRO & FORMS --- */
+/* --- login, cadastro & forms --- */
 section.interface-login {
     display: flex;
     align-self: center;
@@ -725,7 +720,7 @@ section.interface-login {
 
 .cadastro > a {
     display: flex;
-    justify-content: right;
+    justify-content: left;
     text-decoration: none;
     margin-top: 25px;
 }
@@ -783,10 +778,10 @@ section.interface-login {
 }
 
 .form-busca button:active {
-    transform: scale(0.98); /* Efeito de afundar ao clicar */
+    transform: scale(0.98); /* efeito de afundar ao clicar */
 }
 
-/* --- GUIAS & ESPECÍFICOS --- */
+/* --- guias & específicos --- */
 .painel-guia {
     justify-content: center;
     align-items: center;
@@ -809,6 +804,7 @@ section.interface-login {
     height: 150px;
     width: 1000px;
 }
+
 .cabecalho-guia h2 {
     margin: 0 0 0 10px;
 }
@@ -833,7 +829,7 @@ section.interface-login {
     width: 300px;
 }
 
-/* --- UTILITÁRIOS (Botões, Rodapé, Tabela, etc) --- */
+/* --- utilitários (botões, rodapé, tabela, etc) --- */
 .rodape {
     display: flex;
     align-items: center;
@@ -1018,7 +1014,7 @@ td.acoes {
 }
 
 /* ==========================
-   MODAL EDITAR GUIA
+   modal editar guia
 ========================== */
 
 .modal {
@@ -1032,7 +1028,6 @@ td.acoes {
     background-color: rgba(0,0,0,0.5);
     justify-content: center;
     align-items: center;
-
 }
 
 .modal-conteudo {
@@ -1051,4 +1046,27 @@ td.acoes {
     top: 10px;
     font-size: 30px;
     cursor: pointer;
+}
+
+.botaoSalvar {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.botaoSalvar button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 30px;
+    background-color: #F36F6F;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(243, 111, 111, 0.25);
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
 }

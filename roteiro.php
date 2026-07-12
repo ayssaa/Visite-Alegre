@@ -1,5 +1,9 @@
 <?php include_once 'conexao.php'; ?>
 
+<!--
+    Parte da página de roteiros
+-->
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,6 +13,10 @@
     <title>Visite Alegre</title>
 </head>
 <body>
+
+    <!--
+        Menu do Inicio
+    -->
 
     <header>
         <div class="title"><a href="inicio.php"><img src="img/VisiteAlegreLogo.png" alt=""></a></div>
@@ -25,6 +33,10 @@
     </header>
 
     <main>
+
+        <!--
+            Cabeçalho com título e Ratopeira
+        -->
         
         <div class="painel-guia">
             <div class="cabecalho-guia">
@@ -37,6 +49,10 @@
                     <img src="img/ratoperaMapa.png" alt="">
                 </div>
             </div>
+
+            <!--
+                Cadastro dos roteiros
+            -->
 
             <div class="cadastro">
                 
@@ -99,8 +115,6 @@
                 <div class="dados-endereco">
 
                     <div id="listaPontosTuristicos">
-
-                        <!-- Primeiro bloco -->
                         <div class="grupo-ponto">
                             <div class="cima">
                                 <div class="dado-guia">
@@ -124,19 +138,23 @@
 
                     </div>
 
-                    <div class="dado-guia">
-                        <button type="button" id="btnAdicionarPonto">Adicionar Ponto Turístico</button>
+                    <div class="botaoSalvar">
+                        <button type="button" id="btnAdicionarPonto">+</button>
                     </div>
 
                 </div>
 
-                <a href="inicio.html">
+                <a href="roteiro.php">
                     <div class="salvar">
                         <p>Salvar roteiro</p>
                     </div>
                 </a>
             </div>
         </div>
+
+        <!--
+            Historico dos roteiros
+        -->
 
         <div class="painel-guia" id="historico">
             <div class="cabecalho-guia">
@@ -172,18 +190,19 @@
                                 INNER JOIN Usuario u ON r.idGuia = u.idUsuario
                                 ORDER BY r.dataRoteiro ASC
                             ";
-                            $stmtRoteiros = $pdo->query($sqlRoteiros);
+                            $stmtRoteiros = $pdo->prepare($sqlRoteiros);
+                            $stmtRoteiros->execute();
+
                             $roteiros = $stmtRoteiros->fetchAll(PDO::FETCH_ASSOC);
 
-                            // Verifica se encontrou algum roteiro
                             if (!empty($roteiros)):
                                 foreach ($roteiros as $roteiro):
                         ?>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($roteiro['nome_guia']); ?></td>
-                                        <td><?php echo htmlspecialchars($roteiro['data_formatada']); ?></td>
-                                        <td><?php echo htmlspecialchars($roteiro['capacidadeMaxima']); ?> pessoas</td>
-                                        <td><?php echo htmlspecialchars($roteiro['localEncontro']); ?></td>
+                                        <td><?= htmlspecialchars($roteiro['nome_guia']) ?></td>
+                                        <td><?= htmlspecialchars($roteiro['data_formatada']) ?></td>
+                                        <td><?= htmlspecialchars($roteiro['capacidadeMaxima']) ?> pessoas</td>
+                                        <td><?= htmlspecialchars($roteiro['localEncontro']) ?></td>
                                     </tr>
                         <?php 
                                 endforeach;
@@ -191,7 +210,7 @@
                         ?>
                                 <tr>
                                     <td colspan="4" style="text-align: center; padding: 20px; color: #666;">
-                                        Nenhum roteiro cadastrado no sistema.
+                                        Nenhum roteiro cadastrado.
                                     </td>
                                 </tr>
                         <?php 
@@ -204,14 +223,8 @@
                 </div>
             </div>
         </div>
-
-
     </main>
-
-    <footer>
-
-    </footer>
-    
+    <footer></footer>
     <script src="script.js"></script>
 </body>
 </html>

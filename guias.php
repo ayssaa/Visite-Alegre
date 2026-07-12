@@ -211,7 +211,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
 
             <!--
-                Cabeçalho com título e Ratopeira
+                Cadastro dos guias
             -->
 
             <form method="POST">
@@ -252,7 +252,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </div>
 
                             <div class="dado-guia">
-                                <label for="number">Anos de expeciência</label>
+                                <label for="number">Anos de experiência</label>
                                 <input type="number" id="number" name="number" min="0" max="99"placeholder="0" required>
                             </div>
                         </div>
@@ -335,17 +335,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
         </div>
 
+        <!--
+            Historico de guias no banco de dados
+        -->
+
         <div class="painel-guia" id="historico">
             <div class="cabecalho-guia">
                 <div class="bemvindo-texto">
                     <h2>Histórico de Guias</h2>
                     <p>Confira a lista de todos os guias cadastrados.</p>
                 </div>
-
                 <div class="guia-imagem">
                     <img src="img/ratopeiraCamera.png" alt="">
                 </div>
             </div>
+
+            <!-- Esse php e form são para a barra de pesquisa -->
+
+            <?php
+            $busca = trim($_GET['busca'] ?? '');
+            ?>
+
+            <form method="GET" class="form-busca">
+                <input
+                    type="text"
+                    name="busca"
+                    placeholder="Buscar guia pelo nome..."
+                    value="<?= htmlspecialchars($busca) ?>"
+                >
+                <button type="submit">Pesquisar</button>
+            </form>
 
             <div class="lista">
                 <div class="tabela">
@@ -371,9 +390,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     g.anoExperiencia AS anoExperienciaGuia
                                 FROM Usuario u
                                 INNER JOIN Guia g ON u.idUsuario = g.idGuia
-                                ORDER BY u.nome ASC
                             ";
-                            $stmtGuias = $pdo->query($sqlGuias);
+
+                            $params = [];
+
+                            if ($busca !== '') {
+                                $sqlGuias .= " WHERE u.nome LIKE ? ";
+                                $params[] = '%' . $busca . '%';
+                            }
+
+                            $sqlGuias .= " ORDER BY u.nome ASC ";
+
+                            $stmtGuias = $pdo->prepare($sqlGuias);
+                            $stmtGuias->execute($params);
                             $guias = $stmtGuias->fetchAll(PDO::FETCH_ASSOC);
 
                             if (!empty($guias)):
@@ -385,6 +414,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <td><?php echo htmlspecialchars($guia['emailGuia']); ?></td>
                                         <td><?php echo htmlspecialchars($guia['telefoneGuia']); ?></td>
                                         <td><?php echo htmlspecialchars($guia['anoExperienciaGuia']); ?></td>
+                                        
+                                        <!-- Coluna com icones de edicao -->
 
                                         <td class="acoes">
                                             <a href="#"
@@ -404,7 +435,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         ?>
                                 <tr>
                                     <td colspan="6" style="text-align: center; padding: 20px; color: #666;">
-                                        Nenhum Guia cadastrado no sistema.
+                                        Nenhum guia cadastrado.
                                     </td>
                                 </tr>
                         <?php 
@@ -418,11 +449,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
     </main>
-    <footer>
-    </footer>
+    <footer></footer>
 
-
-    <!-- MODAL DE EDIÇÃO DE GUIA -->
+    <!-- 
+        Essa parte so aparece se o botao de editar for clicado
+    -->
 
     <div id="modalEditar" class="modal">
 

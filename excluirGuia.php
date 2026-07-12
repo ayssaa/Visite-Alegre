@@ -2,16 +2,10 @@
 
 include_once 'conexao.php';
 
-
 if(isset($_GET["id"])){
-
     $idGuia = $_GET["id"];
-
-
     try {
-
         $pdo->beginTransaction();
-
 
         // Busca o endereço do usuário antes de excluir
 
@@ -25,17 +19,13 @@ if(isset($_GET["id"])){
 
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
         if(!$usuario){
 
             throw new Exception("Guia não encontrado.");
 
         }
 
-
         $idEndereco = $usuario["idEndereco"];
-
-
 
         // 1 - Exclui os roteiros desse guia
 
@@ -46,8 +36,6 @@ if(isset($_GET["id"])){
 
         $stmt->execute([$idGuia]);
 
-
-
         // 2 - Exclui o guia
 
         $stmt = $pdo->prepare("
@@ -57,8 +45,6 @@ if(isset($_GET["id"])){
 
         $stmt->execute([$idGuia]);
 
-
-
         // 3 - Exclui o usuário
 
         $stmt = $pdo->prepare("
@@ -67,8 +53,6 @@ if(isset($_GET["id"])){
         ");
 
         $stmt->execute([$idGuia]);
-
-
 
         // Verifica se o endereço ficou sem usuários
 
@@ -81,8 +65,6 @@ if(isset($_GET["id"])){
         $stmt->execute([$idEndereco]);
 
         $usuariosEndereco = $stmt->fetchColumn();
-
-
 
         if($usuariosEndereco == 0){
 
@@ -102,8 +84,6 @@ if(isset($_GET["id"])){
 
             $idCidade = $endereco["idCidade"];
 
-
-
             // Exclui endereço
 
             $stmt = $pdo->prepare("
@@ -112,8 +92,6 @@ if(isset($_GET["id"])){
             ");
 
             $stmt->execute([$idEndereco]);
-
-
 
             // Verifica se a cidade ficou sem endereços
 
@@ -124,10 +102,7 @@ if(isset($_GET["id"])){
             ");
 
             $stmt->execute([$idCidade]);
-
             $enderecosCidade = $stmt->fetchColumn();
-
-
 
             if($enderecosCidade == 0){
 
@@ -143,10 +118,7 @@ if(isset($_GET["id"])){
 
         }
 
-
-
         $pdo->commit();
-
 
         echo "
         <script>
@@ -155,17 +127,10 @@ if(isset($_GET["id"])){
         </script>
         ";
 
-
-
     } catch(Exception $e){
-
-
         if($pdo->inTransaction()){
-
             $pdo->rollBack();
-
         }
-
 
         echo "
         <script>
@@ -173,13 +138,6 @@ if(isset($_GET["id"])){
             window.location='guias.php';
         </script>
         ";
-
-
-        // Para testar:
-        // echo $e->getMessage();
-
     }
-
 }
-
 ?>

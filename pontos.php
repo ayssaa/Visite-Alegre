@@ -1,5 +1,9 @@
 <?php include_once 'conexao.php'; ?>
 
+<!--
+    Parte da página de pontos turisticos
+-->
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,6 +13,10 @@
     <title>Visite Alegre</title>
 </head>
 <body>
+
+    <!--
+        Menu do Inicio
+    -->
 
     <header>
         <div class="title"><a href="inicio.php"><img src="img/VisiteAlegreLogo.png" alt=""></a></div>
@@ -25,7 +33,11 @@
     </header>
 
     <main>
-        
+
+        <!--
+            Cabeçalho com título e Ratopeira
+        -->
+
         <div class="painel-guia">
             <div class="cabecalho-guia">
                 <div class="bemvindo-texto">
@@ -38,14 +50,17 @@
                 </div>
             </div>
 
+            <!--
+                Cadastro dos pontos turisticos
+            -->
+
             <div class="cadastro">
                 
                 <div class="titulo">
                     <img src="img/pontos.svg" alt="">
                     <h2>Dados do Ponto Turístico</h2>
                 </div>
-
-
+                
                 <div class="dados-guias">
                     <div class="cima">
                         <div class="dado-guia">
@@ -207,13 +222,17 @@
                         </div>
                     </details>
                 </div>
-                <a href="inicio.html">
+                <a href="pontos.php">
                     <div class="salvar">
                         <p>Salvar Ponto</p>
                     </div>
                 </a>
             </div>
         </div>
+
+        <!--
+            Historico de pontos turisticos no banco de dados
+        -->
 
         <div class="painel-guia" id="historico">
             <div class="cabecalho-guia">
@@ -225,20 +244,6 @@
                     <img src="img/ratopeiraCamera.png" alt="">
                 </div>
             </div>
-
-            <?php
-            $busca = trim($_GET['busca'] ?? '');
-            ?>
-
-            <form method="GET" class="form-busca">
-                <input
-                    type="text"
-                    name="busca"
-                    placeholder="Buscar ponto turístico pelo nome..."
-                    value="<?= htmlspecialchars($busca) ?>"
-                >
-                <button type="submit">Pesquisar</button>
-            </form>
 
             <div class="lista">
                 <div class="tabela">
@@ -253,16 +258,14 @@
                         <?php
                         try {
 
-                            $sql = "SELECT nome, telefone, taxaEntrada, descricao
+                            $sqlPontos = "SELECT nome, telefone, taxaEntrada, descricao
                                     FROM PontoTuristico
-                                    WHERE nome LIKE :busca
                                     ORDER BY nome ASC";
 
-                            $stmt = $pdo->prepare($sql);
-                            $stmt->bindValue(':busca', "%{$busca}%", PDO::PARAM_STR);
-                            $stmt->execute();
+                            $stmtPontos = $pdo->prepare($sqlPontos);
+                            $stmtPontos->execute();
 
-                            $pontos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                            $pontos = $stmtPontos->fetchAll(PDO::FETCH_ASSOC);
 
                             if (!empty($pontos)):
                                 foreach ($pontos as $ponto):
@@ -297,7 +300,7 @@
 
                                 <tr>
                                     <td colspan="4" style="text-align:center; padding:20px; color:#666;">
-                                        Nenhum ponto turístico encontrado na sua busca.
+                                        Nenhum ponto turístico cadastrado.
                                     </td>
                                 </tr>
 
@@ -305,7 +308,7 @@
                             endif;
 
                         } catch (PDOException $e) {
-                            echo "<tr><td colspan='4' style='text-align:center;color:red;'>Erro no Banco de Dados: {$e->getMessage()}</td></tr>";
+                            echo "<tr><td colspan='4' style='text-align:center;color:red;'>Erro ao carregar pontos turísticos: {$e->getMessage()}</td></tr>";
                         }
                         ?>
                     </table>
@@ -313,9 +316,7 @@
             </div>
         </div>
     </main>
-    <footer>
-    </footer>
-
+    <footer></footer>
     <script src="script.js"></script>
 </body>
 </html>

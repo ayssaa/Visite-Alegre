@@ -2,24 +2,15 @@
 
 include_once 'conexao.php';
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
 
     try {
 
-
         $pdo->beginTransaction();
-
 
         $idGuia = $_POST["idGuia"];
 
-
-
-        // ==========================
-        // BUSCA DADOS ATUAIS
-        // ==========================
-
+        // Busca dados atuais
 
         $stmt = $pdo->prepare("
             SELECT 
@@ -28,34 +19,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             WHERE idUsuario = ?
         ");
 
-
         $stmt->execute([$idGuia]);
-
 
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
         if(!$usuario){
-
             throw new Exception("Guia não encontrado.");
-
         }
-
 
         $idEndereco = $usuario["idEndereco"];
 
-
-
-
-        // ==========================
-        // CIDADE
-        // ==========================
-
-
         $cidade = $_POST["cidade"];
         $estado = $_POST["estado"];
-
-
 
         $stmt = $pdo->prepare("
             SELECT idCidade
@@ -64,52 +39,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             AND UF = ?
         ");
 
-
         $stmt->execute([
             $cidade,
             $estado
         ]);
 
-
         $cidadeBanco = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
-
         if($cidadeBanco){
-
-
             $idCidade = $cidadeBanco["idCidade"];
-
-
         }else{
-
-
             $stmt = $pdo->prepare("
                 INSERT INTO Cidade
                 (nome, UF)
                 VALUES (?,?)
             ");
 
-
             $stmt->execute([
                 $cidade,
                 $estado
             ]);
 
-
             $idCidade = $pdo->lastInsertId();
-
-
         }
 
-
-
-
-
-        // ==========================
-        // ATUALIZA ENDEREÇO
-        // ==========================
-
+        // Atualiza endereco
 
         $stmt = $pdo->prepare("
             UPDATE Endereco
@@ -122,7 +76,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             WHERE idEndereco = ?
         ");
 
-
         $stmt->execute([
 
             $_POST["logradouro"],
@@ -134,16 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         ]);
 
-
-
-
-
-
-
-        // ==========================
-        // ATUALIZA USUARIO
-        // ==========================
-
+        // Atualiza usuario
 
         $stmt = $pdo->prepare("
             UPDATE Usuario
@@ -156,7 +100,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             WHERE idUsuario = ?
         ");
 
-
         $stmt->execute([
 
             $_POST["nome"],
@@ -168,83 +111,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         ]);
 
-
-
-
-
-
-
-
-        // ==========================
-        // ATUALIZA GUIA
-        // ==========================
-
-
+        // Atualiza guia
+        
         $stmt = $pdo->prepare("
             UPDATE Guia
             SET anoExperiencia = ?
             WHERE idGuia = ?
         ");
 
-
         $stmt->execute([
-
             $_POST["experiencia"],
             $idGuia
 
         ]);
 
-
-
-
-
-
-
         $pdo->commit();
 
-
-
         echo "
         <script>
-
             alert('Guia atualizado com sucesso!');
-
             window.location='guias.php';
-
         </script>
         ";
-
-
 
     }catch(Exception $e){
-
-
-
         if($pdo->inTransaction()){
-
             $pdo->rollBack();
-
         }
-
-
 
         echo "
         <script>
-
             alert('Erro ao atualizar guia!');
-
             window.location='guias.php';
-
         </script>
         ";
-
-
-        // Para testar:
-        // echo $e->getMessage();
-
-
     }
-
 }
-
 ?>
