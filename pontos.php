@@ -11,15 +11,15 @@
 <body>
 
     <header>
-        <div class="title"><a href="/inicio.php"><img src="/img/VisiteAlegreLogo.png" alt=""></a></div>
+        <div class="title"><a href="inicio.php"><img src="img/VisiteAlegreLogo.png" alt=""></a></div>
         <menu>
             <nav>
-                <a href="/inicio.php"><img src="img/inicio.svg" alt=""><span>Início</span></a>
-                <a href="/pontos.php" class="ativo"><img src="img/pontos.svg" alt=""><span>Pontos Turísticos</span></a>
-                <a href="/eventos.php"><img src="img/eventos.svg" alt=""><span>Eventos</span></a>
-                <a href="/roteiro.php"><img src="img/roteiro.svg" alt=""><span>Roteiro</span></a>
-                <a href="/guias.php"><img src="img/guias.svg" alt=""><span>Guias</span></a>
-                <a href="/login.php"><img src="img/sair.svg" alt=""><span>Sair</span></a>
+                <a href="inicio.php"><img src="img/inicio.svg" alt=""><span>Início</span></a>
+                <a href="pontos.php" class="ativo"><img src="img/pontos.svg" alt=""><span>Pontos Turísticos</span></a>
+                <a href="eventos.php"><img src="img/eventos.svg" alt=""><span>Eventos</span></a>
+                <a href="roteiro.php"><img src="img/roteiro.svg" alt=""><span>Roteiro</span></a>
+                <a href="guias.php"><img src="img/guias.svg" alt=""><span>Guias</span></a>
+                <a href="login.php"><img src="img/sair.svg" alt=""><span>Sair</span></a>
             </nav>
         </menu>
     </header>
@@ -34,14 +34,14 @@
                 </div>
 
                 <div class="guia-imagem">
-                    <img src="/img/ratopeiraOi.png" alt="">
+                    <img src="img/ratopeiraOi.png" alt="">
                 </div>
             </div>
 
             <div class="cadastro">
                 
                 <div class="titulo">
-                    <img src="/img/pontos.svg" alt="">
+                    <img src="img/pontos.svg" alt="">
                     <h2>Dados do Ponto Turístico</h2>
                 </div>
 
@@ -90,7 +90,7 @@
                 </div>
 
                 <div class="titulo linha">
-                    <img src="/img/local.svg" alt="">
+                    <img src="img/local.svg" alt="">
                     <h2>Endereço</h2>
                 </div>
 
@@ -126,7 +126,7 @@
                 </div>
 
                 <div class="titulo linha">
-                    <img src="/img/pontos.svg" alt="">
+                    <img src="img/pontos.svg" alt="">
                     <h2>Especificações</h2>
                 </div>
 
@@ -207,7 +207,7 @@
                         </div>
                     </details>
                 </div>
-                <a href="/inicio.html">
+                <a href="inicio.html">
                     <div class="salvar">
                         <p>Salvar Ponto</p>
                     </div>
@@ -215,17 +215,30 @@
             </div>
         </div>
 
-        <div class="painel-guia">
+        <div class="painel-guia" id="historico">
             <div class="cabecalho-guia">
                 <div class="bemvindo-texto">
                     <h2>Histórico de Pontos</h2>
                     <p>Confira a lista de todos os pontos cadastrados.</p>
                 </div>
-
                 <div class="guia-imagem">
-                    <img src="/img/ratopeiraCamera.png" alt="">
+                    <img src="img/ratopeiraCamera.png" alt="">
                 </div>
             </div>
+
+            <?php
+            $busca = trim($_GET['busca'] ?? '');
+            ?>
+
+            <form method="GET" class="form-busca">
+                <input
+                    type="text"
+                    name="busca"
+                    placeholder="Buscar ponto turístico pelo nome..."
+                    value="<?= htmlspecialchars($busca) ?>"
+                >
+                <button type="submit">Pesquisar</button>
+            </form>
 
             <div class="lista">
                 <div class="tabela">
@@ -236,49 +249,65 @@
                             <td><b>Taxa de Entrada</b></td>
                             <td><b>Descrição</b></td>
                         </tr>
-                        <?php
-                            try {
-                                // Buscando todos pontos turisticos
-                                $sqlPontos = "SELECT nome, telefone, taxaEntrada, descricao FROM PontoTuristico ORDER BY nome ASC";
-                                $stmtPontos = $pdo->query($sqlPontos);
-                                $pontos = $stmtPontos->fetchAll(PDO::FETCH_ASSOC);
 
-                                // Verifica se encontrou algum ponto turístico
-                                if (!empty($pontos)):
-                                    foreach ($pontos as $ponto):
-                            ?>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($ponto['nome']); ?></td>
-                                            
-                                            <td><?php echo !empty($ponto['telefone']) ? htmlspecialchars($ponto['telefone']) : '<span style="color: #999;">Não informado</span>'; ?></td>
-                                            
-                                            <td>
-                                                <?php 
-                                                if ($ponto['taxaEntrada'] > 0) {
-                                                    echo 'R$ ' . number_format($ponto['taxaEntrada'], 2, ',', '.');
-                                                } else {
-                                                    echo '<span style="color: #28a745; font-weight: 500;">Gratuito</span>';
-                                                }
-                                                ?>
-                                            </td>
-                                            
-                                            <td><?php echo htmlspecialchars($ponto['descricao'] ?? 'Sem descrição'); ?></td>
-                                        </tr>
-                            <?php 
-                                    endforeach;
-                                else: 
-                            ?>
+                        <?php
+                        try {
+
+                            $sql = "SELECT nome, telefone, taxaEntrada, descricao
+                                    FROM PontoTuristico
+                                    WHERE nome LIKE :busca
+                                    ORDER BY nome ASC";
+
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->bindValue(':busca', "%{$busca}%", PDO::PARAM_STR);
+                            $stmt->execute();
+
+                            $pontos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                            if (!empty($pontos)):
+                                foreach ($pontos as $ponto):
+                        ?>
+
                                     <tr>
-                                        <td colspan="4" style="text-align: center; padding: 20px; color: #666;">
-                                            Nenhum ponto turístico registado no sistema.
+                                        <td><?= htmlspecialchars($ponto['nome']) ?></td>
+
+                                        <td>
+                                            <?= !empty($ponto['telefone'])
+                                                ? htmlspecialchars($ponto['telefone'])
+                                                : '<span style="color:#999;">Não informado</span>'; ?>
                                         </td>
+
+                                        <td>
+                                            <?php
+                                            if ($ponto['taxaEntrada'] > 0) {
+                                                echo 'R$ ' . number_format($ponto['taxaEntrada'], 2, ',', '.');
+                                            } else {
+                                                echo '<span style="color:#28a745;font-weight:500;">Gratuito</span>';
+                                            }
+                                            ?>
+                                        </td>
+
+                                        <td><?= htmlspecialchars($ponto['descricao'] ?? 'Sem descrição') ?></td>
                                     </tr>
-                            <?php 
-                                endif;
-                            } catch (PDOException $e) {
-                                echo "<tr><td colspan='4' style='color: red; text-align: center;'>Erro ao carregar pontos: " . $e->getMessage() . "</td></tr>";
-                            }
-                            ?>
+
+                        <?php
+                                endforeach;
+                            else:
+                        ?>
+
+                                <tr>
+                                    <td colspan="4" style="text-align:center; padding:20px; color:#666;">
+                                        Nenhum ponto turístico encontrado na sua busca.
+                                    </td>
+                                </tr>
+
+                        <?php
+                            endif;
+
+                        } catch (PDOException $e) {
+                            echo "<tr><td colspan='4' style='text-align:center;color:red;'>Erro no Banco de Dados: {$e->getMessage()}</td></tr>";
+                        }
+                        ?>
                     </table>
                 </div>
             </div>

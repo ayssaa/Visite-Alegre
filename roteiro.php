@@ -11,15 +11,15 @@
 <body>
 
     <header>
-        <div class="title"><a href="/inicio.php"><img src="/img/VisiteAlegreLogo.png" alt=""></a></div>
+        <div class="title"><a href="inicio.php"><img src="img/VisiteAlegreLogo.png" alt=""></a></div>
         <menu>
             <nav>
-                <a href="/inicio.php"><img src="img/inicio.svg" alt=""><span>Início</span></a>
-                <a href="/pontos.php"><img src="img/pontos.svg" alt=""><span>Pontos Turísticos</span></a>
-                <a href="/eventos.php"><img src="img/eventos.svg" alt=""><span>Eventos</span></a>
-                <a href="/roteiro.php" class="ativo"><img src="img/roteiro.svg" alt=""><span>Roteiro</span></a>
-                <a href="/guias.php"><img src="img/guias.svg" alt=""><span>Guias</span></a>
-                <a href="/login.php"><img src="img/sair.svg" alt=""><span>Sair</span></a>
+                <a href="inicio.php"><img src="img/inicio.svg" alt=""><span>Início</span></a>
+                <a href="pontos.php"><img src="img/pontos.svg" alt=""><span>Pontos Turísticos</span></a>
+                <a href="eventos.php"><img src="img/eventos.svg" alt=""><span>Eventos</span></a>
+                <a href="roteiro.php" class="ativo"><img src="img/roteiro.svg" alt=""><span>Roteiro</span></a>
+                <a href="guias.php"><img src="img/guias.svg" alt=""><span>Guias</span></a>
+                <a href="login.php"><img src="img/sair.svg" alt=""><span>Sair</span></a>
             </nav>
         </menu>
     </header>
@@ -34,14 +34,14 @@
                 </div>
 
                 <div class="guia-imagem">
-                    <img src="/img/ratoperaMapa.png" alt="">
+                    <img src="img/ratoperaMapa.png" alt="">
                 </div>
             </div>
 
             <div class="cadastro">
                 
                 <div class="titulo">
-                    <img src="/img/roteiro.svg" alt="">
+                    <img src="img/roteiro.svg" alt="">
                     <h2>Dados do Roteiro</h2>
                 </div>
 
@@ -78,42 +78,59 @@
                 </div>
 
                 <div class="titulo linha">
-                    <img src="/img/local.svg" alt="">
+                    <img src="img/local.svg" alt="">
                     <h2>Local de encontro</h2>
                 </div>
 
                 <div class="dados-endereco">
                     <div class="cima">
                         <div class="dado-guia">
-                            <label for="logradouro">Logradouro</label>
-                            <input type="text" id="logradouro" name="logradouro" placeholder="Rua, Avenida, etc.">
-                        </div>
-
-                        <div class="dado-guia pequeno">
-                            <label for="numero">Número</label>
-                            <input type="number" id="numero" name="numero" placeholder="N°">
-                        </div>
-
-                        <div class="dado-guia">
-                            <label for="bairro">Bairro</label>
-                            <input type="text" id="bairro" name="bairro" placeholder="Digite o bairro">
-                        </div>
-                    </div>
-
-                    <div class="baixo">
-                        <div class="dado-guia">
-                            <label for="cidade">Cidade</label>
-                            <input type="text" id="cidade" name="cidade" placeholder="Digite a cidade">
-                        </div>
-
-                        <div class="dado-guia">
-                            <label for="cep">CEP</label>
-                            <input type="text" id="cep" name="cep" placeholder="00000-000">
+                            <label for="encontro">Local de Encontro</label>
+                            <input type="text" id="encontro" name="encontro" placeholder="Descreva o local de encontro">
                         </div>
                     </div>
                 </div>
 
-                <a href="/inicio.html">
+                <div class="titulo linha">
+                    <img src="img/local.svg" alt="">
+                    <h2>Pontos Turísticos Presentes no Roteiro</h2>
+                </div>
+
+                <div class="dados-endereco">
+
+                    <div id="listaPontosTuristicos">
+
+                        <!-- Primeiro bloco -->
+                        <div class="grupo-ponto">
+                            <div class="cima">
+                                <div class="dado-guia">
+                                    <label>Ponto Turístico</label>
+                                    <input type="text" name="ponto_turistico[]" class="ponto_turistico"
+                                        placeholder="Nome do ponto turístico">
+                                </div>
+
+                                <div class="dado-guia">
+                                    <label>Hora Início</label>
+                                    <input type="time" name="hora_inicio[]" class="hora_inicio">
+                                </div>
+
+                                <div class="dado-guia">
+                                    <label>Hora Fim</label>
+                                    <input type="time" name="hora_fim[]" class="hora_fim">
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="dado-guia">
+                        <button type="button" id="btnAdicionarPonto">Adicionar Ponto Turístico</button>
+                    </div>
+
+                </div>
+
+                <a href="inicio.html">
                     <div class="salvar">
                         <p>Salvar roteiro</p>
                     </div>
@@ -121,7 +138,7 @@
             </div>
         </div>
 
-        <div class="painel-guia">
+        <div class="painel-guia" id="historico">
             <div class="cabecalho-guia">
                 <div class="bemvindo-texto">
                     <h2>Histórico de Roteiros</h2>
@@ -129,7 +146,7 @@
                 </div>
 
                 <div class="guia-imagem">
-                    <img src="/img/ratopeiraCamera.png" alt="">
+                    <img src="img/ratopeiraCamera.png" alt="">
                 </div>
             </div>
 
@@ -194,7 +211,7 @@
     <footer>
 
     </footer>
-
+    
     <script src="script.js"></script>
 </body>
 </html>

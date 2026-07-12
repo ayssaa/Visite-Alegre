@@ -1,3 +1,7 @@
+<!--
+    Parte da Lógica do PHP
+-->
+
 <?php include_once 'conexao.php'; ?>
 
 <?php
@@ -27,7 +31,6 @@ try {
 
     $sqlEventos = "
         SELECT 
-            'img/eventos.svg' AS caminho_imagem,
             e.titulo, 
             DATE_FORMAT(e.dataEvento, '%d/%m/%Y') AS data_evento,
             pt.nome AS local
@@ -40,11 +43,59 @@ try {
     $stmtEventos = $pdo->query($sqlEventos);
     $proximosEventos = $stmtEventos->fetchAll(PDO::FETCH_ASSOC);
 
-} catch (PDOException $e) {
-    // Se der algum erro na busca, a variável continua como 0 e não quebra a tela
-    // Você pode registrar o erro se quiser, mas para o usuário final, mostraremos 0.
-}
+    $sqlPontos = "
+    SELECT
+        pt.nome,
+        pt.taxaEntrada,
+        ROUND(AVG(a.nota), 1) AS media,
+        COUNT(a.idAvaliacao) AS qtdAvaliacoes
+    FROM PontoTuristico pt
+    INNER JOIN Avaliacao a
+        ON pt.idPontoTuristico = a.idPontoTuristico
+    GROUP BY
+        pt.idPontoTuristico,
+        pt.nome,
+        pt.taxaEntrada
+    ORDER BY media DESC, qtdAvaliacoes DESC
+    LIMIT 4
+    ";
+
+    $stmtPontos = $pdo->query($sqlPontos);
+    $pontosBemAvaliados = $stmtPontos->fetchAll(PDO::FETCH_ASSOC);
+
+    $sqlRoteiros = "
+    SELECT
+        r.idRoteiro,
+        r.dataRoteiro,
+        r.localEncontro,
+        u.nome AS guia,
+        rp.tempoInicio,
+        DATE_FORMAT(r.dataRoteiro, '%d') AS dia,
+        UPPER(DATE_FORMAT(r.dataRoteiro, '%b')) AS mes,
+        pt.nome AS titulo
+    FROM Roteiro r
+    INNER JOIN Guia g
+        ON g.idGuia = r.idGuia
+    INNER JOIN Usuario u
+        ON u.idUsuario = g.idGuia
+    INNER JOIN Roteiro_PontoTuristico rp
+        ON rp.idRoteiro = r.idRoteiro
+    INNER JOIN PontoTuristico pt
+        ON pt.idPontoTuristico = rp.idPontoTuristico
+    WHERE r.dataRoteiro >= CURDATE()
+    ORDER BY r.dataRoteiro, rp.tempoInicio
+    LIMIT 4
+    ";
+
+    $stmtRoteiros = $pdo->query($sqlRoteiros);
+    $proximosRoteiros = $stmtRoteiros->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {}
 ?>
+
+<!--
+    Parte do Visite Alegre em si
+-->
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -56,24 +107,32 @@ try {
 </head>
 <body>
 
+    <!--
+        Menu do Inicio
+    -->
+
     <header>
-        <div class="title"><a href="/inicio.php"><img src="/img/VisiteAlegreLogo.png" alt=""></a></div>
+        <div class="title"><a href="inicio.php"><img src="img/VisiteAlegreLogo.png" alt=""></a></div>
         <menu>
             <nav>
-                <a href="/inicio.php" class="ativo"><img src="img/inicio.svg" alt=""><span>Início</span></a>
-                <a href="/pontos.php"><img src="img/pontos.svg" alt=""><span>Pontos Turísticos</span></a>
-                <a href="/eventos.php"><img src="img/eventos.svg" alt=""><span>Eventos</span></a>
-                <a href="/roteiro.php"><img src="img/roteiro.svg" alt=""><span>Roteiro</span></a>
-                <a href="/guias.php"><img src="img/guias.svg" alt=""><span>Guias</span></a>
-                <a href="/login.php"><img src="img/sair.svg" alt=""><span>Sair</span></a>
+                <a href="inicio.php" class="ativo"><img src="img/inicio.svg" alt=""><span>Início</span></a>
+                <a href="pontos.php"><img src="img/pontos.svg" alt=""><span>Pontos Turísticos</span></a>
+                <a href="eventos.php"><img src="img/eventos.svg" alt=""><span>Eventos</span></a>
+                <a href="roteiro.php"><img src="img/roteiro.svg" alt=""><span>Roteiro</span></a>
+                <a href="guias.php"><img src="img/guias.svg" alt=""><span>Guias</span></a>
+                <a href="login.php"><img src="img/sair.svg" alt=""><span>Sair</span></a>
             </nav>
         </menu>
     </header>
 
     <main>
+
+        <!--
+            Esse 'bemvindo' é a faixa branca com o RatoPeira
+        -->
         
         <div class="bemvindo">
-            <img src="/img/RatoPelado.png" alt="">
+            <img src="img/RatoPelado.png" alt="">
             
             <div class="bemvindo-texto">
                 <h1>Olá, Gestor!</h1>
@@ -82,7 +141,13 @@ try {
             </div>
         </div>
 
+        <!--
+            O 'painel' é o dasboard para o gestor
+        -->
+
         <div class="painel">
+            
+            <!-- O 'todos-cartao' são os 4 cartões com os valores de pontos, eventos, roteiros e guias armazenados no banco de dados -->
             <div class="todos-cartao">
                 <div class="cartao">
                     <div class="painel-imagem">
@@ -90,9 +155,9 @@ try {
                     </div>
 
                     <div class="painel-texto">
-                        <h3>Pontos turísticos</h3>
+                        <h3>Pontos</h3>
                         <h2><?php echo $totalPontos ?? 0; ?></h2>
-                        <a href="#">Ver todos</a>
+                        <div class="ver-todos"><a href="pontos.php#historico">Ver todos</a></div>
                     </div>
                 </div>
 
@@ -102,9 +167,9 @@ try {
                     </div>
 
                     <div class="painel-texto">
-                        <h3>Eventos ativos</h3>
+                        <h3>Eventos</h3>
                         <h2><?php echo $totalEventos ?? 0; ?></h2>
-                        <a href="#">Ver todos</a>
+                        <div class="ver-todos"><a href="eventos.php#historico">Ver todos</a></div>
                     </div>
                 </div>
 
@@ -114,9 +179,9 @@ try {
                     </div>
 
                     <div class="painel-texto">
-                        <h3>Roteiros cadastrados</h3>
+                        <h3>Roteiros</h3>
                         <h2><?php echo $totalRoteiros ?? 0; ?></h2>
-                        <a href="#">Ver todos</a>
+                        <div class="ver-todos"><a href="roteiro.php#historico">Ver todos</a></div>
                     </div>
                 </div>
 
@@ -128,70 +193,119 @@ try {
                     <div class="painel-texto">
                         <h3>Guias</h3>
                         <h2><?php echo $totalGuias ?? 0; ?></h2>
-                        <a href="#">Ver todos</a>
+                        <div class="ver-todos"><a href="guias.php#historico">Ver todos</a></div>
                     </div>
                 </div>
             </div>
+            
+            <!-- O 'meio-pagina' são as 3 colunas de informações sobre pontos bem avaliados, proximos roteiros e proximos eventos -->
             <div class="meio-pagina">
-                <div class="atividade-recente">
 
-                    <div class="cabecalho">
-                        <h3>Atividades Recentes</h3>
-
-                        <a href="#">
-                            <div class="ver-todas">
-                                <p>Ver todas</p>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="tabela">
-                        <table>
-                            <tr>
-                                <td>Tipo</td>
-                                <td>Descrição</td>
-                                <td>Usuário</td>
-                                <td>Data</td>
-                            </tr>
-                            <?php 
-                            // Verifica se a variável existe e tem dados antes de tentar listar
-                            if (!empty($atividadesRecentes)): 
-                                foreach ($atividadesRecentes as $atividade): 
-                            ?>
-                                <tr>
-                                    <td><img src="<?php echo $atividade['caminho_icone']; ?>" alt="Ícone da atividade"></td>
-                                    
-                                    <td><?php echo $atividade['descricao']; ?></td>
-                                    <td><?php echo $atividade['nome_usuario']; ?></td>
-                                    <td><?php echo $atividade['data_registro']; ?></td>
-                                </tr>
-                            <?php 
-                                endforeach; 
-                            else: 
-                            ?>
-                                <tr>
-                                    <td colspan="4" style="text-align: center;">Nenhuma atividade recente encontrada.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </table>
-                    </div>
-                </div>
-
+                <!-- Aqui é a coluna de 'Pontos Mais Bem Avaliados' -->
                 <div class="proximos-eventos">
 
                     <div class="cabecalho">
-                        <h3>Próximos Eventos</h3>
+                        <img src="img/pontos.svg" alt="" class="icone">
+                        <h3>Pontos mais bem avaliados</h3>
+                    </div>
 
-                        <a href="#">
-                            <div class="ver-todas">
-                                <p>Ver todas</p>
+                    <div class="eventos">
+                        <?php
+                        if (!empty($pontosBemAvaliados)):
+                            foreach ($pontosBemAvaliados as $ponto):
+                        ?>
+                            <div class="cartao-ponto">
+                                <div class="conteudo-ponto">
+
+                                    <div class="estrela-aninhada">
+                                        <h3><?php echo $ponto['nome']; ?></h3>
+
+                                        <div class="estrelas-ponto">
+                                            <?php echo str_repeat("⭐", floor($ponto['media'])); ?>
+                                        </div>
+                                    </div>
+
+                                    <div class="avaliacao-ponto">
+                                        <span class="nota">
+                                            <?php echo number_format($ponto['media'], 1, ',', '.'); ?>
+                                        </span>
+                                    </div>
+
+                                </div>
                             </div>
-                        </a>
+
+                        <?php
+                            endforeach;
+                        else:
+                        ?>
+                            <p style="color:#666">
+                                Nenhum ponto avaliado.
+                            </p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Aqui é a coluna de 'Próximos Roteiros' -->
+                <div class="proximos-eventos">
+
+                    <div class="cabecalho">
+                        <img src="img/pontos.svg" alt="" class="icone">
+                        <h3>Próximos Roteiros</h3>
+                    </div>
+
+                    <div class="eventos">
+                        <?php if (!empty($proximosRoteiros)): ?>
+
+                            <?php foreach ($proximosRoteiros as $roteiro): ?>
+
+                                <div class="roteiro-cartao">
+
+                                    <div class="roteiro-data">
+                                        <span class="dia"><?php echo $roteiro['dia']; ?></span>
+                                        <span class="mes"><?php echo $roteiro['mes']; ?></span>
+                                    </div>
+
+                                    <div class="roteiro-info">
+
+                                        <h3><?php echo $roteiro['titulo']; ?></h3>
+
+                                        <p>
+                                            <img src="img/guias.svg" alt="" class="icone">
+                                            Guia: <?php echo $roteiro['guia']; ?>
+                                        </p>
+
+                                        <p>
+                                            <img src="img/local.svg" alt="" class="icone">
+                                            Local de encontro: <?php echo $roteiro['localEncontro']; ?>
+                                        </p>
+
+                                    </div>
+
+                                    <div class="roteiro-hora">
+                                        <img src="img/relogio.svg" alt="">
+                                        <?php echo substr($roteiro['tempoInicio'], 0, 5); ?>
+                                    </div>
+
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p style="color:#666;">
+                                Nenhum roteiro programado.
+                            </p>
+                        <?php endif; ?>
+
+                    </div>
+
+                </div>
+
+                <!-- Aqui é a coluna de 'Próximos Eventos' -->
+                <div class="proximos-eventos">
+                    <div class="cabecalho">
+                        <img src="img/eventos.svg" alt="" class="icone"><h3>Próximos Eventos</h3>
                     </div>
                     
                     <div class="eventos">
                         <?php 
-                        // Verifica se a variável de eventos tem dados para exibir
                         if (!empty($proximosEventos)): 
                             foreach ($proximosEventos as $evento): 
                         ?>
@@ -225,9 +339,7 @@ try {
         </div>
     </main>
 
-    <footer>
-
-    </footer>
+    <footer></footer>
 
     <script src="script.js"></script>
 </body>

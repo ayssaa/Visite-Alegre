@@ -13,8 +13,8 @@
 
     <header>
         <div class="title">
-            <a href="/inicio.php">
-                <img src="/img/VisiteAlegreLogo.png" alt="">
+            <a href="inicio.php">
+                <img src="img/VisiteAlegreLogo.png" alt="">
             </a>
         </div>
 
@@ -27,7 +27,7 @@
     <main>
 
         <section class="interface-login">
-            <img src="/img/RatoTopeiraGestor.png" alt="">
+            <img src="img/RatoTopeiraGestor.png" alt="">
 
             <div class="login">
 
@@ -56,7 +56,7 @@
                         <a href="#">Esqueci minha senha</a>
                     </div>
 
-                    <a href="inicio.html">
+                    <a href="inicio.php">
                         <div class="botao">
                             <p>Entrar</p>
                         </div>
